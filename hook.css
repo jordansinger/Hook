@@ -27,10 +27,10 @@
 	/* customizable */ font-weight: normal;
 	/* customizable */ text-shadow: 0px 1px #fff;
 }
-#hook #loader {
+#hook #hook-loader {
 	padding: 10px 0;
 }
-#hook .spinner {
+#hook #hook-loader-spinner {
 	display: block;
 	/* customizable */ background: url(hook-spinner.gif) no-repeat center;
  	/* customizable */ width: 32px;
