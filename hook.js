@@ -9,11 +9,7 @@ $(function () {
               return !!('ontouchstart' in window) || !!('onmsgesturechange' in window);
             };
 
-        win.scroll(function(){
-            st = win.scrollTop();
-        });
-
-    var methods = {
+      var methods = {
 
         init: function(options) {
 
@@ -32,7 +28,8 @@ $(function () {
                                     loaderClass: 'hook-loader',
                                     spinnerClass: 'hook-spinner',
                                     loaderTextClass: 'hook-text',
-                                    loaderText: 'Reloading...'
+                                    loaderText: 'Reloading...',
+                                    reloadEl: function() {}
                                 };
 
                                 settings = $.extend({},  defaults, options);
@@ -55,12 +52,13 @@ $(function () {
                              if (settings.textRequired === true) {
                                  $this.append(spinnerTextElem);
                              }
-
                         }
 
                         if(!hasTouch()) {
-                            win.bind('mousewheel', function(event, delta) {
-                                methods.onScroll($this, settings, delta);
+                            win.on('mousewheel', function(event, delta) {
+                              if(delta >= 100 && st <= 0) {
+                                  methods.onScroll($this, settings, delta);
+                              }
                             });
                         }  else {
                             var lastY = 0,
@@ -90,11 +88,8 @@ $(function () {
                 });
         },
 
-        onScroll: function(el, settings,delta) {
-            if(delta > 10 && st <= 0)
-            {
-                methods.reload(el, settings);
-            }
+        onScroll: function(el, settings) {
+           methods.reload(el, settings);
         },
 
         onSwipe: function(el, settings, swipe) {
@@ -106,20 +101,17 @@ $(function () {
         reload: function(el, settings) {
             var reloadEvent;
 
-            if(settings.reloadPage === false) {
-                reloadEvent = new Event('reloaded');
-                window.dispatchEvent(reloadEvent);
-
-            } else {
-
                 el.show();
                 el.animate({
                     "marginTop": "0px"
                 }, 200);
                 el.delay(500).slideUp(200, function () {
-                    window.location.reload(true);
+                    if(settings.reloadPage === true) {
+                        window.location.reload(true);
+                    } else {
+                        settings.reloadEl();
+                    }
                 });
-            }
         },
 
         destroy: function(options) {
