@@ -47,13 +47,14 @@ $(function () {
                              var loaderElem = '<div class=' + settings.loaderClass + '>';
                                      loaderElem += '<div class='+ settings.spinnerClass + '/>';
                                      loaderElem += '</div>';
-                             var spinnerTextElem = '<span class='+ settings.spinnerClass + '>' + settings.loaderText + '</span>';
+                             var spinnerTextElem = '<span class='+ settings.loaderTextClass + '>' + settings.loaderText + '</span>';
 
                              $this
                                      .append(loaderElem);
 
                              if (settings.textRequired === true) {
-                                 $this.append(spinnerTextElem);
+                                  $this.addClass('hook-with-text');
+                                  $this.append(spinnerTextElem);
                              }
                         }
 

@@ -18,7 +18,7 @@ Pull to refresh. For the web. This rewrite is a work in progress and has only be
 * reloadEl: callback
 
 ##Outstanding issues:
-* Callback called more than once.
+* Firefox reload only appearing after first scrolling down.
 
 ##ToDo's: 
 * Convert from jQuery animate to css3 transitions for browsers that support it.
