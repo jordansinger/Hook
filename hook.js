@@ -5,9 +5,12 @@ $(function () {
 ;(function ( $, window, document, undefined ) {
     var win = $(this),
             st = win.scrollTop() || window.pageYOffset,
-            hasTouch = function() {
+            called = false;
+
+    var hasTouch = function() {
               return !!('ontouchstart' in window) || !!('onmsgesturechange' in window);
             };
+
 
       var methods = {
 
@@ -56,9 +59,13 @@ $(function () {
 
                         if(!hasTouch()) {
                             win.on('mousewheel', function(event, delta) {
-                              if(delta >= 100 && st <= 0) {
-                                  methods.onScroll($this, settings, delta);
-                              }
+                                if(delta >= 150 && st <= 0) {
+                                    if(called === false) {
+                                        methods.onScroll($this, settings, delta);
+
+                                        called = true;
+                                    }
+                                }
                             });
                         }  else {
                             var lastY = 0,
@@ -106,12 +113,16 @@ $(function () {
                     "marginTop": "0px"
                 }, 200);
                 el.delay(500).slideUp(200, function () {
-                    if(settings.reloadPage === true) {
+                    if(settings.reloadPage) {
                         window.location.reload(true);
-                    } else {
-                        settings.reloadEl();
                     }
+
+                    called = false;
                 });
+
+                if(!settings.reloadPage) {
+                    settings.reloadEl();
+                }
         },
 
         destroy: function(options) {
