@@ -27,6 +27,7 @@ $(function () {
                                     reloadPage: true, // if false will reload element
                                     dynamic: true, // if false Hook elements already there
                                     textRequired: false, // will input loader text if true
+                                    scrollWheelSelected: false, // will use scroll wheel events
                                     swipeDistance: 50, // swipe distance for loader to show on touch devices
                                     loaderClass: 'hook-loader',
                                     spinnerClass: 'hook-spinner',
@@ -59,15 +60,15 @@ $(function () {
                         }
 
                         if(!hasTouch()) {
-                            win.on('mousewheel', function(event, delta) {
-                                if(delta >= 150 && st <= 0) {
-                                    if(called === false) {
-                                        methods.onScroll($this, settings, delta);
-
-                                        called = true;
-                                    }
-                                }
-                            });
+                            if(settings.scrollWheelSelected === true){
+                              win.on('mousewheel', function(event, delta) {
+                                  methods.onScroll($this, settings, delta);
+                              });
+                            } else {
+                              win.on('scroll', function() {
+                                  methods.onScroll($this, settings);
+                              });
+                            }
                         }  else {
                             var lastY = 0,
                                  swipe = 0;
@@ -79,9 +80,7 @@ $(function () {
                                 swipe = e.originalEvent.touches[0].pageY + lastY;
                                 st = $(this).scrollTop();
 
-                                if(swipe < settings.swipeDistance) {
-                                    e.preventDefault();
-                                }
+                                if(swipe < settings.swipeDistance) e.preventDefault();
 
                                 if(swipe > settings.swipeDistance && lastY <= 40) {
                                     methods.onSwipe($this, settings);
@@ -96,8 +95,22 @@ $(function () {
                 });
         },
 
-        onScroll: function(el, settings) {
-           methods.reload(el, settings);
+        onScroll: function(el, settings, delta) {
+          st = win.scrollTop();
+
+          if(settings.scrollWheelSelected === true && (delta >= 150 && st <= 0)) {
+              if(called === false) {
+                  methods.reload(el, settings);
+                  called = true;
+              }
+          }
+
+          if(settings.scrollWheelSelected === false && st <= 0) {
+            if(called === false) {
+                methods.reload(el, settings);
+                called = true;
+            }
+          }
         },
 
         onSwipe: function(el, settings, swipe) {
