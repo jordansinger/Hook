@@ -1,38 +1,100 @@
 /**
  * Hook
- * Version: 1.0
- * Author: Jordan Singer, Brandon Jacoby
+ * Version: 1.1
+ * Author: Jordan Singer, Brandon Jacoby, Adam Girton
  * Copyright (c) 2013 - Hook.  All rights reserved.
  * http://www.usehook.com
  */
  
 /* 'customizable' declares that a property can be customized without breaking functionality */
-#hook * {
+.hook * {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 	margin: 0 auto;
 }
-#hook {
+
+.hook {
+	display: none;
 	/* customizable */ height: 85px;
-	/* customizable */ background: url(hook-bg.png) repeat;
-	/* customizable */ box-shadow: 0px -9px 5px -5px #999 inset;
+	/* customizable */ background: url(hook-bgs.png) repeat;
+	/* customizable */ box-shadow: 0 -8px 5px -5px #999 inset;
 	clear: both;
 	position: relative;
 	width: 100%;
 	overflow: hidden;
 	text-align: center;
 }
-#hook span#hook-text {
+.hook-text {
 	/* customizable */ font-size: 14px;
 	/* customizable */ font-family: Arial, Helvetica, sans-serif;
-	/* customizable */ color: #999;
+	/* customizable */ color: #666;
 	/* customizable */ font-weight: normal;
-	/* customizable */ text-shadow: 0px 1px #fff;
+	/* customizable */ text-shadow: 0 1px #fff;
 }
-#hook #loader {
-	padding: 10px 0;
+.hook-loader {
+	padding: 25px 0;
 }
-#hook .spinner {
+.hook-spinner {
 	display: block;
-	/* customizable */ background: url(hook-spinner.gif) no-repeat center;
+	/* customizable */ background: url(hook-spinner.png) no-repeat center;
  	/* customizable */ width: 32px;
  	/* customizable */ height: 32px;
+ 	-webkit-animation: spin 1s linear infinite both;
+ 	-moz-animation: spin 1s linear infinite both;
+ 	-o-animation: spin 1s linear infinite both;
+ 	animation: spin 1s linear infinite both;
+}
+.hook-with-text .hook-loader{
+	padding: 10px 0;
+}
+
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 192dpi),
+only screen and (                min-resolution: 2dppx) {
+  
+  .hook-spinner {
+  	background: url(hook-spinner@2x.png) no-repeat center;
+  	background-size: 32px 32px;
+  }
+}
+
+@-webkit-keyframes spin {
+	0% {
+	             -webkit-transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@-moz-keyframes spin {
+	0% {
+	             -moz-transform: rotate(0deg);
+	}
+	100% {
+		-moz-transform: rotate(360deg);
+	}
+}
+
+@-o-keyframes spin {
+	0% {
+	             -o-transform: rotate(0deg);
+	}
+	100% {
+		-o-transform: rotate(360deg);
+	}
+}
+
+@keyframes spin {
+	0% {
+	             transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
