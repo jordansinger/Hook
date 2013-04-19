@@ -1,19 +1,10 @@
 /**
  * Hook
- * Version: 1.0
- * Author: Jordan Singer, Brandon Jacoby
+ * Version: 1.1
+ * Author: Jordan Singer, Brandon Jacoby, Adam Girton
  * Copyright (c) 2013 - Hook.  All rights reserved.
  * http://www.usehook.com
  */
-
-* {
-	margin: 0;
-	padding: 0;
-}
-
-body {
-	height: 2000px;
-}
  
 /* 'customizable' declares that a property can be customized without breaking functionality */
 .hook * {
@@ -22,6 +13,7 @@ body {
 	box-sizing: border-box;
 	margin: 0 auto;
 }
+
 .hook {
 	display: none;
 	/* customizable */ height: 85px;

@@ -1,6 +1,10 @@
-$(function () {
-    $('#hook').hook();
-});
+/**
+ * Hook
+ * Version: 1.1
+ * Author: Jordan Singer, Brandon Jacoby, Adam Girton
+ * Copyright (c) 2013 - Hook.  All rights reserved.
+ * http://www.usehook.com
+ */
 
 ;(function ( $, window, document, undefined ) {
     var win = $(this),
@@ -19,9 +23,8 @@ $(function () {
                 return this.each(function() {
                     var $this = $(this),
                         settings = $this.data('hook');
-                        height = $this.height();
 
-                        if(typeof(settings) == 'undefined') {
+                        if(typeof(settings) === 'undefined') {
 
                                 var defaults = {
                                     reloadPage: true, // if false will reload element
@@ -80,7 +83,9 @@ $(function () {
                                 swipe = e.originalEvent.touches[0].pageY + lastY;
                                 st = $(this).scrollTop();
 
-                                if(swipe < settings.swipeDistance) e.preventDefault();
+                                if(swipe < settings.swipeDistance) {
+                                  e.preventDefault();
+                                }
 
                                 if(swipe > settings.swipeDistance && lastY <= 40) {
                                     methods.onSwipe($this, settings);
@@ -113,15 +118,13 @@ $(function () {
           }
         },
 
-        onSwipe: function(el, settings, swipe) {
+        onSwipe: function(el, settings) {
             if(st <= 0) {
                 methods.reload(el, settings);
             }
         },
 
         reload: function(el, settings) {
-            var reloadEvent;
-
                 el.show();
                 el.animate({
                     "marginTop": "0px"
@@ -139,7 +142,7 @@ $(function () {
                 }
         },
 
-        destroy: function(options) {
+        destroy: function() {
             return $(this).each(function(){
                 var $this = $(this);
 
@@ -149,13 +152,13 @@ $(function () {
         }
     };
 
-    $.fn.hook = function (options ) {
+    $.fn.hook = function () {
         var method = arguments[0];
 
         if(methods[method]) {
             method = methods[method];
             arguments = Array.prototype.slice.call(arguments, 1);
-        } else if (typeof(method) == 'object' || !method) {
+        } else if (typeof(method) === 'object' || !method) {
             method = methods.init;
         } else {
             $.error( 'Method ' +  method + ' does not exist on jQuery.pluginName' );
