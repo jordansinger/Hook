@@ -1,70 +1,171 @@
-$(function () {
-    window.loadheight = $('#hook').height();
-    window.hidden = $("#hook").animate("marginTop", "-" + loadheight + "px");
-    window.visible = $("#hook").animate("marginTop", "0px");
-    $("#hook").css("marginTop", "-" + loadheight + "px")
-});
-$(function hook() {
-    var loadheight = $('#hook').height();
-    $(window).scroll(function (event) {
-        var st = $(window).scrollTop();
-        if (st <= 0) {
-            $("#hook").animate({
-                "marginTop": "0px"
-            }, 200);
-            $("#hook").delay(500).slideUp(200, function () {
-                window.location.reload()
-            })
-        }
-        if ($.browser.webkit) {
-            if (st == 0) {
-                $('body').css('overflow', 'hidden')
+/**
+ * Hook
+ * Version: 1.1
+ * Author: Jordan Singer, Brandon Jacoby, Adam Girton
+ * Copyright (c) 2013 - Hook.  All rights reserved.
+ * http://www.usehook.com
+ */
+
+;(function ( $, window, document, undefined ) {
+    var win = $(this),
+            st = win.scrollTop() || window.pageYOffset,
+            called = false;
+
+    var hasTouch = function() {
+              return !!('ontouchstart' in window) || !!('onmsgesturechange' in window);
+            };
+
+
+      var methods = {
+
+        init: function(options) {
+
+                return this.each(function() {
+                    var $this = $(this),
+                        settings = $this.data('hook');
+
+                        if(typeof(settings) === 'undefined') {
+
+                                var defaults = {
+                                    reloadPage: true, // if false will reload element
+                                    dynamic: true, // if false Hook elements already there
+                                    textRequired: false, // will input loader text if true
+                                    scrollWheelSelected: false, // will use scroll wheel events
+                                    swipeDistance: 50, // swipe distance for loader to show on touch devices
+                                    loaderClass: 'hook-loader',
+                                    spinnerClass: 'hook-spinner',
+                                    loaderTextClass: 'hook-text',
+                                    loaderText: 'Reloading...',
+                                    reloadEl: function() {}
+                                };
+
+                                settings = $.extend({},  defaults, options);
+
+                                $this.data('hook', settings);
+                        } else {
+
+                                settings = $.extend({}, settings, options);
+                        }
+
+                        if(settings.dynamic === true) {
+                             var loaderElem = '<div class=' + settings.loaderClass + '>';
+                                     loaderElem += '<div class='+ settings.spinnerClass + '/>';
+                                     loaderElem += '</div>';
+                             var spinnerTextElem = '<span class='+ settings.loaderTextClass + '>' + settings.loaderText + '</span>';
+
+                             $this
+                                     .append(loaderElem);
+
+                             if (settings.textRequired === true) {
+                                  $this.addClass('hook-with-text');
+                                  $this.append(spinnerTextElem);
+                             }
+                        }
+
+                        if(!hasTouch()) {
+                            if(settings.scrollWheelSelected === true){
+                              win.on('mousewheel', function(event, delta) {
+                                  methods.onScroll($this, settings, delta);
+                              });
+                            } else {
+                              win.on('scroll', function() {
+                                  methods.onScroll($this, settings);
+                              });
+                            }
+                        }  else {
+                            var lastY = 0,
+                                 swipe = 0;
+                            win.on('touchstart', function(e){
+                                lastY = e.originalEvent.touches[0].pageY;
+                            });
+
+                            win.on('touchmove', function(e) {
+                                swipe = e.originalEvent.touches[0].pageY + lastY;
+                                st = $(this).scrollTop();
+
+                                if(swipe < settings.swipeDistance) {
+                                  e.preventDefault();
+                                }
+
+                                if(swipe > settings.swipeDistance && lastY <= 40) {
+                                    methods.onSwipe($this, settings);
+                                }
+                            });
+
+                            win.on('touchend', function(){
+                                swipe = 0;
+                            });
+                        }
+
+                });
+        },
+
+        onScroll: function(el, settings, delta) {
+          st = win.scrollTop();
+
+          if(settings.scrollWheelSelected === true && (delta >= 150 && st <= 0)) {
+              if(called === false) {
+                  methods.reload(el, settings);
+                  called = true;
+              }
+          }
+
+          if(settings.scrollWheelSelected === false && st <= 0) {
+            if(called === false) {
+                methods.reload(el, settings);
+                called = true;
             }
-        }
-    })
-});
+          }
+        },
 
+        onSwipe: function(el, settings) {
+            if(st <= 0) {
+                methods.reload(el, settings);
+            }
+        },
 
-//Browser detection, unsupported in jQuery latest.
-(function () {
-    var matched, browser;
-    jQuery.uaMatch = function (ua) {
-        ua = ua.toLowerCase();
-        var match = /(chrome)[ \/]([\w.]+)/.exec(ua) || /(webkit)[ \/]([\w.]+)/.exec(ua) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) || /(msie) ([\w.]+)/.exec(ua) || ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua) || [];
-        return {
-            browser: match[1] || "",
-            version: match[2] || "0"
+        reload: function(el, settings) {
+                el.show();
+                el.animate({
+                    "marginTop": "0px"
+                }, 200);
+                el.delay(500).slideUp(200, function () {
+                    if(settings.reloadPage) {
+                        window.location.reload(true);
+                    }
+
+                    called = false;
+                });
+
+                if(!settings.reloadPage) {
+                    settings.reloadEl();
+                }
+        },
+
+        destroy: function() {
+            return $(this).each(function(){
+                var $this = $(this);
+
+                $this.empty();
+                $this.removeData('hook');
+            });
         }
     };
-    matched = jQuery.uaMatch(navigator.userAgent);
-    browser = {};
-    if (matched.browser) {
-        browser[matched.browser] = true;
-        browser.version = matched.version
-    }
-    if (browser.chrome) {
-        browser.webkit = true
-    } else if (browser.webkit) {
-        browser.safari = true
-    }
-    jQuery.browser = browser;
-    jQuery.sub = function () {
-        function jQuerySub(selector, context) {
-            return new jQuerySub.fn.init(selector, context)
+
+    $.fn.hook = function () {
+        var method = arguments[0];
+
+        if(methods[method]) {
+            method = methods[method];
+            arguments = Array.prototype.slice.call(arguments, 1);
+        } else if (typeof(method) === 'object' || !method) {
+            method = methods.init;
+        } else {
+            $.error( 'Method ' +  method + ' does not exist on jQuery.pluginName' );
+                        return this;
         }
-        jQuery.extend(true, jQuerySub, this);
-        jQuerySub.superclass = this;
-        jQuerySub.fn = jQuerySub.prototype = this();
-        jQuerySub.fn.constructor = jQuerySub;
-        jQuerySub.sub = this.sub;
-        jQuerySub.fn.init = function init(selector, context) {
-            if (context && context instanceof jQuery && !(context instanceof jQuerySub)) {
-                context = jQuerySub(context)
-            }
-            return jQuery.fn.init.call(this, selector, context, rootjQuerySub)
-        };
-        jQuerySub.fn.init.prototype = jQuerySub.fn;
-        var rootjQuerySub = jQuerySub(document);
-        return jQuerySub
-    }
-})();
+
+        return method.apply(this, arguments);
+    };
+
+})( jQuery, window, document );
