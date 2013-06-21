@@ -32,7 +32,7 @@ $('#hook').hook();
 $('#hook').hook({
   reloadPage: false,
   reloadEl: function(){
-    console.log('Hello World!);
+    console.log('Hello World!');
   }
 });
 ````
