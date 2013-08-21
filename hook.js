@@ -15,6 +15,21 @@
               return !!('ontouchstart' in window) || !!('onmsgesturechange' in window);
             };
 
+      var handlers = {};
+
+      var addHandler = function(name, fn) {
+        win.on(name, fn);
+        handlers[name] = fn;
+      };
+      var removeHandler = function(name, fn) {
+        win.off(name, handlers[name]);
+        delete handlers[name];
+      };
+      var removeHandlers = function() {
+        for (var name in handlers) {
+          removeHandler(name);
+        }
+      };
 
       var methods = {
 
@@ -64,22 +79,22 @@
 
                         if(!hasTouch()) {
                             if(settings.scrollWheelSelected === true){
-                              win.on('mousewheel', function(event, delta) {
+                              addHandler('mousewheel', function(event, delta) {
                                   methods.onScroll($this, settings, delta);
-                              });
+                              })
                             } else {
-                              win.on('scroll', function() {
+                              addHandler('scroll', function() {
                                   methods.onScroll($this, settings);
                               });
                             }
                         }  else {
                             var lastY = 0,
                                  swipe = 0;
-                            win.on('touchstart', function(e){
+                            addHandler('touchstart', function(e){
                                 lastY = e.originalEvent.touches[0].pageY;
                             });
 
-                            win.on('touchmove', function(e) {
+                            addHandler('touchmove', function(e) {
                                 swipe = e.originalEvent.touches[0].pageY + lastY;
                                 st = $(this).scrollTop();
 
@@ -92,7 +107,7 @@
                                 }
                             });
 
-                            win.on('touchend', function(){
+                            addHandler('touchend', function(){
                                 swipe = 0;
                             });
                         }
@@ -143,6 +158,7 @@
         },
 
         destroy: function() {
+            removeHandlers();
             return $(this).each(function(){
                 var $this = $(this);
 
