@@ -21,6 +21,7 @@
 	/* customizable */ box-shadow: 0 -8px 5px -5px #999 inset;
 	clear: both;
 	position: relative;
+	z-index: 9999;
 	width: 100%;
 	overflow: hidden;
 	text-align: center;
