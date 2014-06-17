@@ -47,6 +47,7 @@
                                     textRequired: false, // will input loader text if true
                                     scrollWheelSelected: false, // will use scroll wheel events
                                     swipeDistance: 50, // swipe distance for loader to show on touch devices
+                                    lastYDistance: 40, // minimum Y coordinate for triggering reloading on touch devices
                                     loaderClass: 'hook-loader',
                                     spinnerClass: 'hook-spinner',
                                     loaderTextClass: 'hook-text',
@@ -102,7 +103,7 @@
                                   e.preventDefault();
                                 }
 
-                                if(swipe > settings.swipeDistance && lastY <= 40) {
+                                if(swipe > settings.swipeDistance && lastY <= settings.lastYDistance) {
                                     methods.onSwipe($this, settings);
                                 }
                             });
