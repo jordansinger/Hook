@@ -1,101 +1,74 @@
 /**
  * Hook
- * Version: 1.1
+ * Version: 2.0
  * Author: Jordan Singer, Brandon Jacoby, Adam Girton
- * Copyright (c) 2013 - Hook.  All rights reserved.
- * http://www.usehook.com
+ * Copyright (c) 2016 Hook. All rights reserved.
+ * https://github.com/jordansinger/Hook
  */
- 
-/* 'customizable' declares that a property can be customized without breaking functionality */
-.hook * {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	margin: 0 auto;
-}
 
-.hook {
-	display: none;
-	/* customizable */ height: 85px;
-	/* customizable */ background: url(hook-bgs.png) repeat;
-	/* customizable */ box-shadow: 0 -8px 5px -5px #999 inset;
-	clear: both;
-	position: relative;
-	z-index: 9999;
-	width: 100%;
-	overflow: hidden;
-	text-align: center;
+#hook {
+    width: 64px;
+    height: 64px;
+    background: #fff;
+    position: absolute;
+    top: 32px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 3px;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    z-index: 9999;
+    opacity: 0;
 }
-.hook-text {
-	/* customizable */ font-size: 14px;
-	/* customizable */ font-family: Arial, Helvetica, sans-serif;
-	/* customizable */ color: #666;
-	/* customizable */ font-weight: normal;
-	/* customizable */ text-shadow: 0 1px #fff;
+#hook:after {
+    content: "";
+    -webkit-animation: spin 1s linear infinite both;
+    animation: spin 1s linear infinite both;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://s3.amazonaws.com/hookjs/hook.png");
+    background-position: center;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
 }
-.hook-loader {
-	padding: 25px 0;
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
-.hook-spinner {
-	display: block;
-	/* customizable */ background: url(hook-spinner.png) no-repeat center;
- 	/* customizable */ width: 32px;
- 	/* customizable */ height: 32px;
- 	-webkit-animation: spin 1s linear infinite both;
- 	-moz-animation: spin 1s linear infinite both;
- 	-o-animation: spin 1s linear infinite both;
- 	animation: spin 1s linear infinite both;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
-.hook-with-text .hook-loader{
-	padding: 10px 0;
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
 }
-
-@media
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (   min--moz-device-pixel-ratio: 2),
-only screen and (     -o-min-device-pixel-ratio: 2/1),
-only screen and (        min-device-pixel-ratio: 2),
-only screen and (                min-resolution: 192dpi),
-only screen and (                min-resolution: 2dppx) {
-  
-  .hook-spinner {
-  	background: url(hook-spinner@2x.png) no-repeat center;
-  	background-size: 32px 32px;
-  }
-}
-
 @-webkit-keyframes spin {
-	0% {
-	             -webkit-transform: rotate(0deg);
-	}
-	100% {
-		-webkit-transform: rotate(360deg);
-	}
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
-
-@-moz-keyframes spin {
-	0% {
-	             -moz-transform: rotate(0deg);
-	}
-	100% {
-		-moz-transform: rotate(360deg);
-	}
-}
-
-@-o-keyframes spin {
-	0% {
-	             -o-transform: rotate(0deg);
-	}
-	100% {
-		-o-transform: rotate(360deg);
-	}
-}
-
 @keyframes spin {
-	0% {
-	             transform: rotate(0deg);
-	}
-	100% {
-		transform: rotate(360deg);
-	}
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
