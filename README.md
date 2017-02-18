@@ -3,14 +3,14 @@ Hook
 
 Pull to refresh for the web
 
-##Dependencies
+## Dependencies
 * jQuery
 
-##Settings
+## Settings
 * refresh: refreshes entire page, default is true, if false will call callback (must also have callback setting),
 * callback: custom callback function
 
-##Examples:
+## Examples:
 ```` JS
 // Defaults
 $('#hook').hook();
